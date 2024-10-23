@@ -151,7 +151,7 @@ def generate_documentation(metadata, paths):
             for status, response in details['responses'].items():
                 documentation += f"- {status}: {response.get('description', 'No description')}\n"
             documentation += "\n"
-    export_documentation(documentation,"intermediate.md")
+    export_documentation(documentation,"output/intermediate.md")
     return documentation
 
 
@@ -408,14 +408,21 @@ def export_documentation(documentation, filename):
         file_path (str): The file path where the documentation will be saved.
     """
 
+    directory = os.path.dirname(filename)
+    
+    # Check if the directory exists, if not, create it
+    if directory and not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Open the file in write mode (creates the file if it doesn't exist)
     with open(filename, 'w') as f:
         f.write(documentation)
 
 if __name__ == "__main__":
     # Define file paths for the Swagger and test files
-    swagger_file = "swagger.json"
-    test_file = "test_api.py"
-    output_file = "documentation.md"
+    swagger_file = "input/swagger.json"
+    test_file = "input/test_api.py"
+    output_file = "output/documentation.md"
     # Parse Swagger file and generate initial documentation
     metadata, paths = parse_swagger(swagger_file)
     logging.info("Swagger File Parsed")
@@ -428,7 +435,7 @@ if __name__ == "__main__":
     final_documentation = ai_component(documentation_with_tests, ai='gemini') # Gemini Tested
     logging.info("Improvised Documentation using GenAI")
     # Export the final documentation to a markdown file
-    export_documentation(final_documentation, 'documentation.md')
+    export_documentation(final_documentation, output_file)
     logging.info("Documentation Exported")
     # Print the final documentation to console
     # print(final_documentation)
