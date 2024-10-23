@@ -54,6 +54,7 @@ Setup
     ```
 
 3.  Ensure you have defined the Swagger JSON file and Python test files in the main.
+4.  Run the code using `python main.py`
 
 
 Contributing
